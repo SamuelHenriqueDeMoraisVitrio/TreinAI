@@ -1,0 +1,62 @@
+
+
+
+
+---@param Link table
+---@param path string
+---@return nil
+local function Install_dependencie(Link, path)
+
+  darwin.dtw.remove_any(path .. Link.out)
+
+  local sucesses = os.execute("curl -s -L " .. Link.link .. " -o " .. path .. Link.out) -- Curl -L {link} -o {path_for_dependencie/}{out_renamed}
+
+  if sucesses then
+    print("\n\tSuccess in downloading:\n\t" .. Link.out .. "")
+    return
+  end
+
+  print("\n\tError making request on:\n\t" .. Link.out .. "")
+
+end
+
+local links = {
+  {
+    link = "https://github.com/OUIsolutions/BearHttpsClient/releases/download/0.2.001/BearHttpsClientOne.c",
+    out = "dep.BearClient.c"
+  },
+  {
+    link = "https://github.com/OUIsolutions/DoTheWorld/releases/download/v8.002/doTheWorld.h",
+    out = "dep.doTheWorld.h"
+  },
+  {
+    link = "https://github.com/SamuelHenriqueDeMoraisVitrio/ClientSDKOpenAI/releases/download/0.0.6/SDK_OpenAIOne.c",
+    out = "dep.sdk.c"
+  },
+  {
+    link = "https://github.com/OUIsolutions/C-argv-parser/releases/download/0.0.2/CArgvParseOne.c",
+    out = "dep.args.c"
+  }
+}
+
+---@return nil
+function Install_dependencies()
+
+
+  local path = "src/dependencies/"
+  darwin.dtw.remove_any(path)
+  local cache = path .. "cache"
+  darwin.dtw.write_file(cache, "")
+  darwin.dtw.remove_any(cache)
+
+  for I=1, #links do
+    Install_dependencie(links[I], path)
+  end
+
+  print("\n")
+
+end
+
+
+
+
